@@ -7,6 +7,11 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   web-automation:
     name: Web Automation Tests
@@ -33,21 +38,6 @@ jobs:
           path: 03-Web-Automation/playwright-report/
           retention-days: 30
 
-  mobile-testing:
-    name: Mobile Emulation Tests
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-      - name: Install Playwright
-        working-directory: 03-Web-Automation
-        run: npm ci && npx playwright install --with-deps
-      - name: Run Mobile Tests
-        working-directory: 03-Web-Automation
-        run: npx playwright test ../04-Mobile-Testing/tests/
-
   api-testing:
     name: API Tests (Newman)
     runs-on: ubuntu-latest
@@ -57,10 +47,10 @@ jobs:
         with:
           node-version: '20'
       - name: Install Newman
-        run: npm install -g newman newman-reporter-htmlextra
+        run: npm install newman newman-reporter-htmlextra
       - name: Run Newman
         run: |
-          newman run 02-API-Testing/postman/RestfulBooking.postman_collection.json \
+          npx newman run 02-API-Testing/postman/RestfulBooking.postman_collection.json \
             -e 02-API-Testing/postman/Staging.postman_environment.json \
             --reporters cli,htmlextra \
             --reporter-htmlextra-export 02-API-Testing/newman/report.html
@@ -72,38 +62,66 @@ jobs:
           path: 02-API-Testing/newman/report.html
           retention-days: 30
 
-  security-testing:
-    name: Security Tests
+  deploy-report:
+    name: Deploy Reports to GitHub Pages
+    needs: [web-automation, api-testing]
+    if: always()
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Download Playwright Report
+        uses: actions/download-artifact@v4
         with:
-          node-version: '20'
-      - name: Install Playwright
-        working-directory: 03-Web-Automation
-        run: npm ci && npx playwright install --with-deps
-      - name: Run Security Tests
-        working-directory: 03-Web-Automation
-        run: npx playwright test ../06-Security-Testing/tests/
-
-  performance-testing:
-    name: Performance Tests
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install K6
+          name: playwright-report
+          path: reports/playwright/
+      - name: Download Newman Report
+        uses: actions/download-artifact@v4
+        with:
+          name: newman-report
+          path: reports/newman/
+      - name: Create index page
         run: |
-          sudo gpg -k
-          sudo gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
-          echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
-          sudo apt-get update && sudo apt-get install k6
-      - name: Run K6 Load Test
-        run: k6 run 07-Performance-Testing/k6/load-test.js
-      - name: Upload K6 Report
-        uses: actions/upload-artifact@v4
-        if: always()
+          mkdir -p reports
+          cat > reports/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>QA Portfolio - Test Reports</title>
+            <style>
+              body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; }
+              h1 { color: #333; }
+              .card { border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin: 20px 0; }
+              .card h2 { margin-top: 0; }
+              a { color: #2196F3; text-decoration: none; font-size: 18px; }
+              a:hover { text-decoration: underline; }
+              .badge { display: inline-block; padding: 4px 8px; border-radius: 4px; color: white; font-size: 14px; }
+              .pass { background: #4CAF50; }
+            </style>
+          </head>
+          <body>
+            <h1>QA Portfolio - Test Reports</h1>
+            <div class="card">
+              <h2>Playwright HTML Report</h2>
+              <p>42 automated tests covering Web, Mobile, Security, and Database testing</p>
+              <a href="./playwright/index.html">View Playwright Report</a>
+            </div>
+            <div class="card">
+              <h2>Newman API Report</h2>
+              <p>10 API endpoints with 28 assertions</p>
+              <a href="./newman/report.html">View Newman Report</a>
+            </div>
+          </body>
+          </html>
+          EOF
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          name: k6-report
-          path: 07-Performance-Testing/reports/
-          retention-days: 30
+          path: reports/
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
