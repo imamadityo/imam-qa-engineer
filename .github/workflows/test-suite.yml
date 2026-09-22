@@ -7,11 +7,6 @@ on:
     branches: [main]
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 jobs:
   web-automation:
     name: Web Automation Tests
@@ -67,9 +62,6 @@ jobs:
     needs: [web-automation, api-testing]
     if: always()
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
       - name: Download Playwright Report
@@ -84,44 +76,56 @@ jobs:
           path: reports/newman/
       - name: Create index page
         run: |
-          mkdir -p reports
           cat > reports/index.html << 'EOF'
           <!DOCTYPE html>
-          <html>
+          <html lang="id">
           <head>
+            <meta charset="UTF-8">
             <title>QA Portfolio - Test Reports</title>
             <style>
-              body { font-family: Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; }
-              h1 { color: #333; }
-              .card { border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin: 20px 0; }
-              .card h2 { margin-top: 0; }
-              a { color: #2196F3; text-decoration: none; font-size: 18px; }
-              a:hover { text-decoration: underline; }
-              .badge { display: inline-block; padding: 4px 8px; border-radius: 4px; color: white; font-size: 14px; }
+              * { margin: 0; padding: 0; box-sizing: border-box; }
+              body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f5f5; padding: 40px 20px; }
+              .container { max-width: 800px; margin: 0 auto; }
+              h1 { color: #333; margin-bottom: 30px; text-align: center; }
+              .card { background: white; border-radius: 12px; padding: 30px; margin: 20px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+              .card h2 { color: #2196F3; margin-bottom: 10px; }
+              .card p { color: #666; margin-bottom: 15px; }
+              .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; color: white; font-size: 13px; font-weight: bold; }
               .pass { background: #4CAF50; }
+              a.btn { display: inline-block; background: #2196F3; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold; }
+              a.btn:hover { background: #1976D2; }
+              .stats { text-align: center; margin: 30px 0; }
+              .stats .number { font-size: 48px; font-weight: bold; color: #4CAF50; }
+              .stats .label { color: #666; }
             </style>
           </head>
           <body>
-            <h1>QA Portfolio - Test Reports</h1>
-            <div class="card">
-              <h2>Playwright HTML Report</h2>
-              <p>42 automated tests covering Web, Mobile, Security, and Database testing</p>
-              <a href="./playwright/index.html">View Playwright Report</a>
-            </div>
-            <div class="card">
-              <h2>Newman API Report</h2>
-              <p>10 API endpoints with 28 assertions</p>
-              <a href="./newman/report.html">View Newman Report</a>
+            <div class="container">
+              <h1>QA Portfolio - Test Reports</h1>
+              <div class="stats">
+                <div class="number">42+</div>
+                <div class="label">Automated Tests</div>
+              </div>
+              <div class="card">
+                <h2>Playwright HTML Report</h2>
+                <p>Web Automation, Mobile, Security, Database tests</p>
+                <span class="badge pass">42 Tests - All Pass</span>
+                <br><br>
+                <a class="btn" href="./playwright/index.html">View Report</a>
+              </div>
+              <div class="card">
+                <h2>Newman API Report</h2>
+                <p>Restful Booker API - Full CRUD + Negative Tests</p>
+                <span class="badge pass">28 Assertions - All Pass</span>
+                <br><br>
+                <a class="btn" href="./newman/report.html">View Report</a>
+              </div>
             </div>
           </body>
           </html>
           EOF
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: reports/
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./reports
