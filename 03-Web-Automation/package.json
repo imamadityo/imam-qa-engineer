@@ -1,0 +1,15 @@
+{
+  "name": "imam-qa-engineer",
+  "version": "1.0.0",
+  "description": "QA Engineer Portfolio - Web Automation with Playwright",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:headed": "npx playwright test --headed",
+    "test:ui": "npx playwright test --ui",
+    "test:debug": "npx playwright test --debug",
+    "report": "npx playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.60.0"
+  }
+}
