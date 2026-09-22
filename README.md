@@ -55,7 +55,7 @@ imam-qa-engineer/
 
 ### Installation
 ```bash
-git clone https://github.com/USERNAME/imam-qa-engineer.git
+git clone https://github.com/imamadityo/imam-qa-engineer.git
 cd imam-qa-engineer
 npm install
 ```
@@ -92,7 +92,7 @@ Tests run automatically on every push via GitHub Actions:
 
 ## Contact
 
-- **GitHub:** [USERNAME](https://github.com/USERNAME)
+- **GitHub:** [imamadityo](https://github.com/imamadityo)
 - **Email:** [EMAIL]
 
 ---
