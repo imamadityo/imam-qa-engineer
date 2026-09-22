@@ -1,0 +1,27 @@
+{
+  "name": "imam-qa-engineer",
+  "version": "1.0.0",
+  "description": "[![Playwright](https://img.shields.io/badge/Playwright-1.60-green.svg)](https://playwright.dev) [![Postman](https://img.shields.io/badge/Postman-API-orange.svg)](https://www.postman.com) [![OWASP](https://img.shields.io/badge/OWASP-Security-red.svg)](https://owasp.org) [![K6](https://img.shields.io/badge/K6-Performance-blue.svg)](https://k6.io) [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/imamadityo/imam-qa-engineer.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/imamadityo/imam-qa-engineer/issues"
+  },
+  "homepage": "https://github.com/imamadityo/imam-qa-engineer#readme",
+  "devDependencies": {
+    "newman": "^6.2.2",
+    "newman-reporter-htmlextra": "^1.23.1"
+  }
+}

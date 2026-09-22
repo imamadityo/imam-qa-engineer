@@ -9,6 +9,8 @@ blob-report/
 
 # Reports
 *.html
+!02-API-Testing/newman/report.html
+!03-Web-Automation/playwright-report/**
 
 # IDE
 .vscode/

@@ -14,7 +14,9 @@ test.describe('Inventory/Products Tests', () => {
     await loginPage.login(testData.validUser.username, testData.validUser.password);
   });
 
-  test('TC-006: Verifikasi product list tampil', async () => {
+  test('TC-006: Verifikasi product list tampil', async ({ page }) => {
+    await page.waitForLoadState('networkidle');
+    await page.waitForSelector('.inventory_item', { timeout: 10000 });
     const productCount = await inventoryPage.getProductCount();
     expect(productCount).toBeGreaterThan(0);
     expect(productCount).toBe(6);
