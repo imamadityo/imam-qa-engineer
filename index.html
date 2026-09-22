@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Imam - QA Engineer Portfolio</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #0d1117; color: #c9d1d9; padding: 40px 20px; }
+    .container { max-width: 900px; margin: 0 auto; }
+    h1 { color: #58a6ff; margin-bottom: 10px; font-size: 32px; }
+    .subtitle { color: #8b949e; margin-bottom: 40px; font-size: 18px; }
+    .stats { display: flex; gap: 20px; margin-bottom: 40px; flex-wrap: wrap; }
+    .stat-card { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 20px 30px; text-align: center; flex: 1; min-width: 150px; }
+    .stat-card .number { font-size: 48px; font-weight: bold; color: #3fb950; }
+    .stat-card .label { color: #8b949e; font-size: 14px; margin-top: 5px; }
+    .card { background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 30px; margin: 20px 0; }
+    .card h2 { color: #58a6ff; margin-bottom: 10px; font-size: 22px; }
+    .card p { color: #8b949e; margin-bottom: 15px; }
+    .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; color: white; font-size: 13px; font-weight: bold; margin-right: 8px; }
+    .pass { background: #238636; }
+    .info { background: #1f6feb; }
+    a.btn { display: inline-block; background: #238636; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold; margin-top: 10px; transition: background 0.2s; }
+    a.btn:hover { background: #2ea043; }
+    .footer { text-align: center; margin-top: 40px; color: #484f58; }
+    .footer a { color: #58a6ff; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Imam - QA Engineer Portfolio</h1>
+    <p class="subtitle">Automated Test Reports</p>
+
+    <div class="stats">
+      <div class="stat-card">
+        <div class="number">42</div>
+        <div class="label">Automated Tests</div>
+      </div>
+      <div class="stat-card">
+        <div class="number">28</div>
+        <div class="label">API Assertions</div>
+      </div>
+      <div class="stat-card">
+        <div class="number">100%</div>
+        <div class="label">Pass Rate</div>
+      </div>
+      <div class="stat-card">
+        <div class="number">7</div>
+        <div class="label">Test Categories</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Playwright HTML Report</h2>
+      <p>Web Automation, Mobile, Security, Database tests</p>
+      <span class="badge pass">42 Tests - All Pass</span>
+      <span class="badge info">POM Pattern</span>
+      <br><br>
+      <a class="btn" href="./playwright/index.html">View Report</a>
+    </div>
+
+    <div class="card">
+      <h2>Newman API Report</h2>
+      <p>Restful Booker API - Full CRUD + Negative Tests</p>
+      <span class="badge pass">28 Assertions - All Pass</span>
+      <span class="badge info">10 Endpoints</span>
+      <br><br>
+      <a class="btn" href="./newman/report.html">View Report</a>
+    </div>
+
+    <div class="footer">
+      <p><a href="https://github.com/imamadityo/imam-qa-engineer">GitHub Repository</a></p>
+    </div>
+  </div>
+</body>
+</html>
